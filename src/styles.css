@@ -1,0 +1,138 @@
+/* styles.css */
+
+/* Adjust the box width for wellness */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Align TextShare and FileShare to the left and right */
+  .left-component, .right-component {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .right-component {
+    align-items: flex-end;
+  }
+  
+  /* Style for the shared data list */
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50rem;
+  }
+  
+  /* Style for the buttons */
+  button {
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px 2px;
+    border-radius: 5px;
+  }
+  
+  /* Style for the input field */
+  textarea, input[type="file"], input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Style for the download and copy buttons */
+  button.download-button, button.copy-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 5px;
+  }
+  
+  button.share-file-button {
+    float: left;
+    margin-right: 44rem; /* Add some right margin to separate it from the other buttons */
+  }
+
+  /* Style for the message container */
+  .message-container {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+
+  /* styles.css */
+
+/* ... (previous styles) */
+
+/* Style for the button container */
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  /* Style for the download and copy buttons */
+  button.download-button, button.copy-button,button.delete-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 5px;
+  }
+  
+  button.download-button {
+    margin-right: 0; /* Remove the right margin for better alignment */
+  }
+  
+  button.share-file-button {
+    float: left;
+    margin-right: 44rem; /* Add some right margin to separate it from the other buttons */
+  }
+  
+  /* Style for the message container */
+  .message-container {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #39843d; /* Change this color to your desired hover color */
+  }
