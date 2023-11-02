@@ -21,8 +21,15 @@
 /* Define media queries for smaller screens */
 @media (max-width: 768px) {
   .file-share-card {
-    width: 300px; /* Adjust for screens smaller than 768px */
+    width: 80%; /* Adjust for screens smaller than 768px */
     margin: 20px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2;
+    box-shadow:10;
+    padding: 3;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
@@ -38,7 +45,7 @@
   display: flex;
   flex-direction: column; /* Change the flex-direction to column for better mobile view */
   align-items: center;
-  padding: 16px; /* Add some padding for spacing */
+   /* Add some padding for spacing */
 }
 .left-component .MuiCardContent-root {
   margin: 16px; /* Add margin around the message content */
@@ -49,15 +56,36 @@
   margin-top: 16px; /* Change margin-left to margin-top for vertical spacing */
 }
 
+/* Add this to your CSS file */
+.shared-card {
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.shared-card:hover {
+  transform: scale(1.02); /* Slightly increase the card size */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
+  background-color: #f0f0f0; /* Change the background color on hover */
+}
+
+
 /* Define media queries for smaller screens (e.g., screens smaller than 768px) */
 @media (max-width: 768px) {
   .left-component {
     width: 100%; /* Adjust max-width for full width on smaller screens */
   }
 
-  .left-component .MuiCardContent-root {
-    margin: 8px; /* Adjust margin value for better spacing */
-  }
+  /* Add this to your CSS file */
+.shared-card {
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.shared-card:hover {
+  transform: scale(1.02); /* Slightly increase the card size */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
+  background-color: #f0f0f0; /* Change the background color on hover */
+}
+
+  
 
   /* Reduce font size and padding for better mobile view */
   .left-component .MuiTypography-gutterBottom {
@@ -73,7 +101,7 @@
   /* Reduce font size and spacing for the text area on smaller screens */
   .left-component .MuiInputBase-input.MuiInputBase-input {
     font-size: 16px;
-    padding: 10px;
+    /* padding: 10px; */
   }
 
   /* Reduce font size and margin for the "Share Text" button on smaller screens */
@@ -93,4 +121,13 @@
     margin-right: 4px;
     margin-bottom: 8px; /* Adjust margin-bottom for vertical spacing */
   }
+
+  .button-container{
+    margin: 4px;
+  }
+
+  .full-card{
+    margin-top: 1rem;
+  }
+
 }

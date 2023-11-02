@@ -63,8 +63,10 @@ function FileShare() {
   return (
     <Card
       sx={{
-        width: "100%",
+        width: "90%",
         borderRadius: 2,
+        boxShadow: 10,
+        padding:3,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",

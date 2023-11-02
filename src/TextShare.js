@@ -68,7 +68,10 @@ function TextShare() {
   }, []);
 
   return (
-      <Card sx={{width: "100%", // Set the width to a percentage value
+      <Card sx={{width: "90%", // Set the width to a percentage value
+      margin:2,
+      padding:0,
+      boxShadow:10,
       borderRadius: 2,
       display: "flex",
       justifyContent: "center",
@@ -86,14 +89,14 @@ function TextShare() {
         <TextField id="outlined-basic" label="Enter text" variant="outlined" value={sharedText}
           onChange={(event) => setSharedText(event.target.value)}
           placeholder="Enter text to share"/>
-        <Button variant="contained" endIcon={<SendIcon />} onClick={shareText} sx={{ marginLeft:3 }}>Share Text</Button>
+        <Button variant="contained" endIcon={<SendIcon />} onClick={shareText} sx={{ marginLeft:3,marginTop:1 }}>Share Text</Button>
         <ul>
           {sharedData.map(data => (
-                <Card sx={{ width:600, marginTop:1 ,left:10}}>
+                <Card sx={{ width:700, marginTop:2 ,boxShadow:10,marginLeft:-7}} className="shared-card">
 
-            <li key={data.id} style={{ margin: "8px 0" }}>
+            <li key={data.id} style={{ margin: "8px" ,padding:"15px 15px "}}>
             {data.text}
-            <CardActions>
+            <CardActions className="full-card">
               <div className="button-container">
                 <Button  onClick={() => copyText(data.text)} variant="contained" size="medium" sx={{marginRight:1}} >Copy</Button>
 
