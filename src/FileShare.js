@@ -1,154 +1,119 @@
-import { useState, useEffect, useCallback } from "react";
-import { db, storage } from "./firebase";
-import './styles.css';
-
+import React, { useEffect, useState } from "react";
+import { storage } from "./firebase";
 import {
-  collection,
-  onSnapshot,
-  addDoc,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+  ref,
+  listAll,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
+import Button from "@mui/material/Button";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CircularProgress from "@mui/material/CircularProgress";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SendIcon from "@mui/icons-material/Send";
+import Typography from "@mui/material/Typography";
 
 function FileShare() {
-  const [sharedText, setSharedText] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [customFileName, setCustomFileName] = useState("");
-  const sharedCollectionRef = collection(db, "shared_data");
-  const [sharedData, setSharedData] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
-  // Use a local cache to minimize reads
-  const [dataCache, setDataCache] = useState([]);
+  useEffect(() => {
+    fetchFiles(); // Initial fetch of files on component load
+  }, []);
 
-  const shareData = async () => {
-    try {
-      if (selectedFile) {
-        let fileName = customFileName || selectedFile.name; // Use customFileName or the original file name
-        const fileRef = ref(storage, `files/${fileName}`);
-        console.log("Uploading file:", fileName); // Add upload log
-        await uploadBytes(fileRef, selectedFile);
-        console.log("File uploaded:", fileName); // Add upload success log
-        const downloadURL = await getDownloadURL(fileRef);
-        console.log("File URL:", downloadURL); // Add download URL log
-        await addDoc(sharedCollectionRef, { fileURL: downloadURL });
-        console.log("Shared data added to Firestore:", downloadURL); // Add shared data log
-        setCustomFileName(""); // Clear the customFileName input
-      } else if (sharedText) {
-        await addDoc(sharedCollectionRef, { text: sharedText });
-      }
-      setSharedText("");
-      setSelectedFile(null);
-    } catch (error) {
-      console.error("Error sharing data:", error);
-    }
-  }
-
-  const getSharedData = useCallback(async () => {
-    // Set up a listener for real-time updates
-    onSnapshot(sharedCollectionRef, (snapshot) => {
-      const updatedData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-      setDataCache(updatedData);
-    });
-  }, [sharedCollectionRef]);
-
-  const deleteSharedData = async (id, fileURL) => {
-    try {
-      console.log("Deleting shared data with ID:", id);
-      if (fileURL) {
-        const fileName = getFileNameFromURL(fileURL);
-        console.log("File URL:", fileURL);
-        console.log("File Name:", fileName);
-        const fileRef = ref(storage, `files/${fileName}`);
-        console.log("File Reference:", fileRef);
-        try {
-          await getDownloadURL(fileRef);
-          console.log("File exists. Deleting from Firebase Storage...");
-          await deleteObject(fileRef);
-          console.log("File deleted from Firebase Storage.");
-        } catch (error) {
-          console.log("File does not exist in Firebase Storage.");
-        }
-      }
-      console.log("Deleting shared data document from Firestore...");
-      const sharedDoc = doc(db, "shared_data", id);
-      await deleteDoc(sharedDoc);
-      console.log("Shared data document deleted from Firestore.");
-    } catch (error) {
-      console.error("Error deleting data:", error);
-    }
-  }
-
-  const getFileNameFromURL = (fileURL) => {
-    try {
-      const url = new URL(fileURL);
-      const path = url.pathname;
-      const pathComponents = path.split('/');
-      if (pathComponents.length >= 2) {
-        return decodeURIComponent(pathComponents[pathComponents.length - 1]);
-      } else {
-        console.error("Invalid file URL:", fileURL);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error constructing URL:", error);
-      return null;
-    }
-  }
-
-  const downloadFile = (fileURL) => {
-    const a = document.createElement('a');
-    a.href = fileURL;
-    a.target = '_blank';
-    a.download = getFileNameFromURL(fileURL);
-    a.click();
+  const fetchFiles = async () => {
+    const storageRef = ref(storage, "uploaded_files");
+    const filesList = await listAll(storageRef);
+    const fileUrls = await Promise.all(
+      filesList.items.map(async (item) => ({
+        name: item.name,
+        downloadUrl: await getDownloadURL(item),
+      }))
+    );
+    setFiles(fileUrls);
   };
 
-  useEffect(() => {
-    getSharedData();
-  }, [getSharedData]);
+  const deleteFile = async (fileName) => {
+    const storageRef = ref(storage, `uploaded_files/${fileName}`);
+    await deleteObject(storageRef);
+    const updatedFiles = files.filter((file) => file.name !== fileName);
+    setFiles(updatedFiles);
+  };
 
-  useEffect(() => {
-    setSharedData(dataCache);
-  }, [dataCache]);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+
+  const handleUpload = async () => {
+    if (file) {
+      const storageRef = ref(storage, `uploaded_files/${file.name}`);
+      setUploading(true);
+      await uploadBytes(storageRef, file);
+      setUploading(false);
+      fetchFiles(); // Fetch the updated file list after successful upload
+    }
+  };
 
   return (
-    <div className="right-component">
-      <h2>File Sharing</h2>
-      <input
-        type="file"
-        accept="image/*, .pdf, .doc, .docx"
-        onChange={(e) => setSelectedFile(e.target.files[0])}
-      />
-      <input
-        type="text"
-        placeholder="Custom File Name (optional)"
-        value={customFileName}
-        onChange={(event) => setCustomFileName(event.target.value)}
-      />
-      <button className="share-file-button" onClick={shareData}>Share File</button>
+    <Card
+      sx={{
+        width: "100%",
+        borderRadius: 2,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div>
+        <Typography gutterBottom variant="h5" component="div">
+          File Sharing
+        </Typography>
+        <input type="file" onChange={handleFileChange} />
+        {uploading ? (
+          <Button variant="outlined" disabled>
+            <CircularProgress size={20} sx={{ marginRight: 1 }} /> Uploading
+          </Button>
+        ) : (
+          <Button onClick={handleUpload} variant="outlined" startIcon={<CloudUploadIcon />}>
+            Upload File
+          </Button>
+        )}
 
-      <ul>
-        {sharedData.map(data => (
-          <li key={data.id}>
-            {data.text && <div><strong>Text:</strong> {data.text}</div>}
-            {data.fileURL && (
-              <div>
-                <strong>File Name:</strong> {
-                  getFileNameFromURL(data.fileURL)
-                }
-              </div>
-            )}
-            <div className="button-container">
-              {data.fileURL && (
-                <button onClick={() => downloadFile(data.fileURL)} className="download-button">Download</button>
-              )}
-              <button onClick={() => deleteSharedData(data.id, data.fileURL)} className="delete-button">Delete</button>
-            </div>
-          </li>
+        {files.map((file) => (
+          <div
+            key={file.name}
+            sx={{
+              margin: "8px 0", // Add spacing between file entries
+            }}
+          >
+            {file.name}
+            <CardActions>
+              <Button
+                variant="outlined"
+                component="a"
+                href="#as-link"
+                href={file.downloadUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download
+              </Button>
+
+              <Button onClick={() => deleteFile(file.name)} variant="outlined" startIcon={<DeleteIcon />}>
+                Delete
+              </Button>
+            </CardActions>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </Card>
   );
 }
 

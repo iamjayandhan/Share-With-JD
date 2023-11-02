@@ -8,6 +8,15 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import SendIcon from '@mui/icons-material/Send';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+
 
 function TextShare() {
   const [sharedText, setSharedText] = useState("");
@@ -59,26 +68,46 @@ function TextShare() {
   }, []);
 
   return (
-    <div className="left-component">
-      <h2>Text Sharing</h2>
-      <textarea
-        value={sharedText}
-        onChange={(event) => setSharedText(event.target.value)}
-        placeholder="Enter text to share"
-      />
-      <button onClick={shareText}>Share Text</button>
-      <ul>
-        {sharedData.map(data => (
-          <li key={data.id}>
+      <Card sx={{width: "100%", // Set the width to a percentage value
+      borderRadius: 2,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+      }} className="left-component">
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          Text Sharing
+        </Typography>
+        {/* <textarea
+          value={sharedText}
+          onChange={(event) => setSharedText(event.target.value)}
+          placeholder="Enter text to share"
+        /> */}
+        <TextField id="outlined-basic" label="Enter text" variant="outlined" value={sharedText}
+          onChange={(event) => setSharedText(event.target.value)}
+          placeholder="Enter text to share"/>
+        <Button variant="contained" endIcon={<SendIcon />} onClick={shareText} sx={{ marginLeft:3 }}>Share Text</Button>
+        <ul>
+          {sharedData.map(data => (
+                <Card sx={{ width:600, marginTop:1 ,left:10}}>
+
+            <li key={data.id}>
             {data.text}
-            <div className="button-container">
-              <button onClick={() => copyText(data.text)} className="copy-button">Copy</button>
-              <button onClick={() => deleteSharedData(data.id)} className="delete-button">Delete</button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+            <CardActions>
+              <div className="button-container">
+                <Button  onClick={() => copyText(data.text)} variant="contained" size="medium" sx={{marginRight:1}} >Copy</Button>
+
+                <Button variant="contained" onClick={() => deleteSharedData(data.id)} size="medium">Delete</Button>
+              </div>
+              </CardActions>
+
+            </li>
+            </Card>
+
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }
 
