@@ -21,19 +21,14 @@
 /* Define media queries for smaller screens */
 @media (max-width: 768px) {
   .file-share-card {
-    width: 80%; /* Adjust for screens smaller than 768px */
+    width: 100px; /* Adjust for screens smaller than 768px */
     margin: 20px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 2;
-    box-shadow:10;
-    padding: 3;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
 }
+
+
 
 
 /* styles.css (or a separate CSS file for TextShare) */

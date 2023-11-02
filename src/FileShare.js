@@ -63,7 +63,7 @@ function FileShare() {
   return (
     <Card
       sx={{
-        width: "90%",
+        width: "80%",
         borderRadius: 2,
         boxShadow: 10,
         padding:3,
