@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { db } from "./firebase";
 import './styles.css'; // Adjust the path if necessary
 import {
@@ -11,25 +11,36 @@ import {
 
 function TextShare() {
   const [sharedText, setSharedText] = useState("");
-  const textShareCollectionRef = collection(db, "textshare"); // Use "textshare" collection
+  const sharedCollectionRef = collection(db, "textshare"); // Use "textshare" collection
   const [sharedData, setSharedData] = useState([]);
 
   const shareText = async () => {
-    if (sharedText.trim() !== "") { // Check if the input is not empty or only contains whitespace
-      await addDoc(textShareCollectionRef, { text: sharedText.trim() }); // Use the "textshare" collection and trim the input
-      setSharedText("");
+    if (sharedText.trim() !== "") {
+      try {
+        const newDocRef = await addDoc(sharedCollectionRef, { text: sharedText.trim() });
+        setSharedData([...sharedData, { text: sharedText.trim(), id: newDocRef.id }]);
+        setSharedText("");
+      } catch (error) {
+        console.error("Error sharing text:", error);
+      }
+    } else {
+      alert("Text input cannot be empty.");
     }
   }
 
-  const getSharedData = useCallback(async () => {
-    const data = await getDocs(textShareCollectionRef); // Use the "textshare" collection
+  const getSharedData = async () => {
+    const data = await getDocs(sharedCollectionRef);
     setSharedData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-  }, [textShareCollectionRef]);
+  }
 
   const deleteSharedData = async (id) => {
-    const sharedDoc = doc(db, "textshare", id); // Use the "textshare" collection
-    await deleteDoc(sharedDoc);
-    getSharedData();
+    try {
+      const sharedDoc = doc(db, "textshare", id);
+      await deleteDoc(sharedDoc);
+      setSharedData(sharedData.filter(data => data.id !== id));
+    } catch (error) {
+      console.error("Error deleting shared data:", error);
+    }
   }
 
   const copyText = (text) => {
@@ -44,7 +55,8 @@ function TextShare() {
 
   useEffect(() => {
     getSharedData();
-  }, [getSharedData]);
+
+  }, []);
 
   return (
     <div className="left-component">
