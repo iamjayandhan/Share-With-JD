@@ -63,7 +63,7 @@ function FileShare() {
   return (
     <Card
       sx={{
-        width: "80%",
+        width: "78%",
         borderRadius: 2,
         boxShadow: 10,
         padding:3,
@@ -75,7 +75,7 @@ function FileShare() {
       className="file-share-card"
     >
       <div>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h5" component="div" >
           File Sharing
         </Typography>
         <input type="file" onChange={handleFileChange}  />
@@ -93,8 +93,6 @@ function FileShare() {
 <Typography gutterBottom variant="h5" component="div" sx={{ marginTop:"40px"}}>
           Uploaded Files
         </Typography>
-
-
         {files.map((file) => (
           <div
             key={file.name}
@@ -122,6 +120,7 @@ function FileShare() {
               </Button>
             </CardActions>
           </div>
+          
         ))}
       </div>
     </Card>

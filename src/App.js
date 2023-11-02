@@ -23,11 +23,26 @@ function App() {
           gutterBottom
           sx={{
             textAlign: 'center', // Center the text
-            padding: '10px', // Add some padding
-            borderRadius: '8px', // Add rounded corners
-            fontFamily: 'Open Sans, sans-serif'
+    padding: '10px', // Add some padding
+    borderRadius: '2px', // Add rounded corners
+    fontFamily: 'Raleway, sans-serif',
+    fontWeight: 'bold', // Add a bold font weight
+    backgroundColor: '#2196F3', // Set a background color
+    color: 'white', // Set text color to white
           }}>
-        Share Hub❤️
+        ShareWithJD<a href="https://taplink.cc/iamjayandhan" target="_blank" rel="noopener noreferrer" style={{
+    textDecoration: 'none', // Remove the underline
+  }}>
+  <span
+    role="img"
+    aria-label="Puzzle Piece"
+    style={{
+      cursor: 'pointer', // Change cursor to a pointer to indicate it's clickable
+    }}
+  >
+    🧩
+  </span>
+</a>
       </Typography>
 
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

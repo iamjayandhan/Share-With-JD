@@ -78,7 +78,7 @@ function TextShare() {
       alignItems: "center"
       }} className="left-component">
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h5" component="div" >
           Text Sharing
         </Typography>
         {/* <textarea
@@ -89,8 +89,8 @@ function TextShare() {
         <TextField id="outlined-basic" label="Enter text" variant="outlined" value={sharedText}
           onChange={(event) => setSharedText(event.target.value)}
           placeholder="Enter text to share"/>
-        <Button variant="contained" endIcon={<SendIcon />} onClick={shareText} sx={{ marginLeft:3,marginTop:1 }}>Share Text</Button>
-        <ul>
+        <Button variant="contained" endIcon={<SendIcon />} onClick={shareText} sx={{ marginLeft:3,marginTop:1,fontFamily:'Raleway, sans-serif' }}>Share Text</Button>
+        <ul style={{ margin: '1px' }}>
           {sharedData.map(data => (
                 <Card sx={{ width:700, marginTop:2 ,boxShadow:10,marginLeft:-7}} className="shared-card">
 
