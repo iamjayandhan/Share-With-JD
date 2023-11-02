@@ -70,6 +70,7 @@ function FileShare() {
         justifyContent: "center",
         alignItems: "center",
       }}
+      className="file-share-card"
     >
       <div>
         <Typography gutterBottom variant="h5" component="div">
@@ -92,6 +93,7 @@ function FileShare() {
             sx={{
               margin: "8px 0", // Add spacing between file entries
             }}
+            className="file-entry"
           >
             {file.name}
             <CardActions>
