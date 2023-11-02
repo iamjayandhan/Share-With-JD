@@ -71,6 +71,7 @@ function FileShare() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center", 
+        marginTop:-0.2,
       }}
       className="file-share-card"
     >

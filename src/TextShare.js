@@ -112,7 +112,7 @@ function TextShare() {
             <Card sx={{
               width: "90%", // Make the card full width
               marginTop: 2,
-              boxShadow: 6,
+              boxShadow: 3,
               marginBottom:3,
             }} className="shared-card" key={data.id}>
               <li style={{ margin: 0, padding: "15px 0px",paddingLeft:"10px" ,paddingRight:"10px"}}>
