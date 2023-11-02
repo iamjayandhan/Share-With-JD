@@ -110,12 +110,12 @@ function TextShare() {
         <ul style={{ padding: 0 }}>
           {sharedData.map(data => (
             <Card sx={{
-              width: "100%", // Make the card full width
+              width: "90%", // Make the card full width
               marginTop: 2,
               boxShadow: 6,
               marginBottom:3,
             }} className="shared-card" key={data.id}>
-              <li style={{ margin: 0, padding: "15px 15px" }}>
+              <li style={{ margin: 0, padding: "15px 0px",paddingLeft:"10px" ,paddingRight:"10px"}}>
                 {data.text}
                 <CardActions className="full-card">
                   <div className="button-container">
