@@ -68,45 +68,63 @@ function TextShare() {
   }, []);
 
   return (
-      <Card sx={{width: "90%", // Set the width to a percentage value
-      margin:2,
-      padding:0,
-      boxShadow:10,
+    <Card sx={{
+      width: "90%",
+      margin: "0 auto", // Center the card
+      padding: 0,
+      boxShadow: 10,
       borderRadius: 2,
       display: "flex",
       justifyContent: "center",
       alignItems: "center"
-      }} className="left-component">
+    }} className="left-component">
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div" >
+        <Typography gutterBottom variant="h5" component="div">
           Text Sharing
         </Typography>
-        {/* <textarea
+        <TextField
+          id="outlined-basic"
+          label="Enter text"
+          variant="outlined"
           value={sharedText}
           onChange={(event) => setSharedText(event.target.value)}
           placeholder="Enter text to share"
-        /> */}
-        <TextField id="outlined-basic" label="Enter text" variant="outlined" value={sharedText}
-          onChange={(event) => setSharedText(event.target.value)}
-          placeholder="Enter text to share"/>
-        <Button variant="contained" endIcon={<SendIcon />} onClick={shareText} sx={{ marginLeft:3,marginTop:1,fontFamily:'Raleway, sans-serif' }}>Share Text</Button>
-        <ul style={{ margin: '1px' }}>
+          sx={{
+            width: '100%', // Set the width to 100% or adjust it as needed
+          }}
+          
+        />
+        <Button
+          variant="contained"
+          endIcon={<SendIcon />}
+          onClick={shareText}
+          sx={{
+            marginTop: 2,
+            fontFamily: 'Raleway, sans-serif',
+            marginLeft:1,
+            width: '145px', // Set a specific fixed width (adjust the value as needed)
+          }}
+        >
+          Share Text
+        </Button>
+        <ul style={{ padding: 0 }}>
           {sharedData.map(data => (
-                <Card sx={{ width:700, marginTop:2 ,boxShadow:10,marginLeft:-7}} className="shared-card">
-
-            <li key={data.id} style={{ margin: "8px" ,padding:"15px 15px "}}>
-            {data.text}
-            <CardActions className="full-card">
-              <div className="button-container">
-                <Button  onClick={() => copyText(data.text)} variant="contained" size="medium" sx={{marginRight:1}} >Copy</Button>
-
-                <Button variant="contained" onClick={() => deleteSharedData(data.id)} size="medium">Delete</Button>
-              </div>
-              </CardActions>
-
-            </li>
+            <Card sx={{
+              width: "100%", // Make the card full width
+              marginTop: 2,
+              boxShadow: 6,
+              marginBottom:3,
+            }} className="shared-card" key={data.id}>
+              <li style={{ margin: 0, padding: "15px 15px" }}>
+                {data.text}
+                <CardActions className="full-card">
+                  <div className="button-container">
+                    <Button onClick={() => copyText(data.text)} variant="contained" size="medium" sx={{ marginRight: 1 }}>Copy</Button>
+                    <Button variant="contained" onClick={() => deleteSharedData(data.id)} size="medium">Delete</Button>
+                  </div>
+                </CardActions>
+              </li>
             </Card>
-
           ))}
         </ul>
       </CardContent>
