@@ -6,6 +6,7 @@ import React from "react";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
+import Notice from './Notice';
 
 
 
@@ -44,7 +45,7 @@ function App() {
   </span>
 </a>
       </Typography>
-
+      <div className="content-container">
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
         <Tab label="Text Share" />
         <Tab label="File Share" />
@@ -52,7 +53,8 @@ function App() {
 
       {value === 0 && <TextShare />}
       {value === 1 && <FileShare />}
-
+      <Notice/>
+    </div>
     </div>
   );
 }

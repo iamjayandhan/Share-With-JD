@@ -70,7 +70,7 @@ function FileShare() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "center", 
       }}
       className="file-share-card"
     >
