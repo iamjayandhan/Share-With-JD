@@ -76,16 +76,22 @@ function FileShare() {
         <Typography gutterBottom variant="h5" component="div">
           File Sharing
         </Typography>
-        <input type="file" onChange={handleFileChange} />
+        <input type="file" onChange={handleFileChange}  />
         {uploading ? (
-          <Button variant="outlined" disabled>
+          <Button variant="outlined" sx={{ marginTop:"20px"}} disabled>
             <CircularProgress size={20} sx={{ marginRight: 1 }} /> Uploading
           </Button>
         ) : (
-          <Button onClick={handleUpload} variant="outlined" startIcon={<CloudUploadIcon />}>
+          <Button onClick={handleUpload} variant="outlined" startIcon={<CloudUploadIcon />} sx={{ marginTop:"20px"}}>
             Upload File
           </Button>
         )}
+
+
+<Typography gutterBottom variant="h5" component="div" sx={{ marginTop:"40px"}}>
+          Uploaded Files
+        </Typography>
+
 
         {files.map((file) => (
           <div
@@ -104,6 +110,7 @@ function FileShare() {
                 href={file.downloadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                sx={{ marginRight:"10px"}}
               >
                 Download
               </Button>

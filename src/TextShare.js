@@ -91,7 +91,7 @@ function TextShare() {
           {sharedData.map(data => (
                 <Card sx={{ width:600, marginTop:1 ,left:10}}>
 
-            <li key={data.id}>
+            <li key={data.id} style={{ margin: "8px 0" }}>
             {data.text}
             <CardActions>
               <div className="button-container">
