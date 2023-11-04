@@ -121,7 +121,7 @@ function FileShare() {
         ) : (
           <Button
             onClick={handleUpload}
-            variant="outlined"
+            variant="contained"
             startIcon={<CloudUploadIcon />}
             sx={{ marginTop: "20px" }}
           >
@@ -165,7 +165,7 @@ function FileShare() {
             {file.name}
             <CardActions>
               <Button
-                variant="outlined"
+                variant="contained"
                 component="a"
                 href="#as-link"
                 href={file.downloadUrl}

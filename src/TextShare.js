@@ -16,6 +16,8 @@ import Typography from '@mui/material/Typography';
 import SendIcon from '@mui/icons-material/Send';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert'; // Import the Alert component
+import DeleteIcon from "@mui/icons-material/Delete";
+
 
 function TextShare() {
   const [sharedText, setSharedText] = useState("");
@@ -82,7 +84,6 @@ function TextShare() {
   return (
     <Card sx={{
       width: "90%", // Set a fixed width (100%)
-      maxWidth: 500, // Set a maximum width (adjust as needed)
       margin: "0 auto", // Center the card
       padding: 0,
       boxShadow: 10,
@@ -137,12 +138,12 @@ function TextShare() {
               overflow: 'hidden',
               textOverflow: 'ellipsis', // Add ellipsis for overflow
             }} className="shared-card" key={data.id}>
-              <li style={{ margin: 0, padding: "15px 0px", paddingLeft: "10px", paddingRight: "10px", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <li style={{ margin: 0, padding: "15px 0px", paddingLeft: "10px", paddingRight: "10px", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
                 {data.text}
                 <CardActions className="full-card">
                   <div className="button-container">
                     <Button onClick={() => copyText(data.text)} variant="contained" size="medium" sx={{ marginRight: 1 }}>Copy</Button>
-                    <Button variant="contained" onClick={() => deleteSharedData(data.id)} size="medium">Delete</Button>
+                    <Button variant="contained" onClick={() => deleteSharedData(data.id)} size="medium" startIcon={<DeleteIcon />}>Delete</Button>
                   </div>
                 </CardActions>
               </li>

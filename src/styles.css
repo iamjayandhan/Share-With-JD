@@ -162,13 +162,38 @@
   text-align: center;
 }
 
-@keyframes text-flow {
+/* @keyframes text-flow {
   0% {
     color: #5cc6d6;
   }
 
-  /* Add more keyframes for text color animation */
   100% {
     color: #b45cd6;
   }
+} 
+*/
+
+@keyframes text-flow {
+  0% {
+    color: #5cc6d6;
+  }
+  20% {
+    color: #6c5cd6;
+  }
+  40% {
+    color: #d65c9b;
+  }
+  60% {
+    color: #5cd678;
+  }
+  80% {
+    color: #b45cd6;
+  }
+  100% {
+    color: #5cc6d6;
+  }
 }
+
+
+
+

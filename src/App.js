@@ -29,8 +29,8 @@ function App() {
     borderRadius: '2px', // Add rounded corners
     fontFamily: 'Raleway, sans-serif',
     fontWeight: 'bold', // Add a bold font weight
-    backgroundColor: 'black', // Set a background color
-    color: 'white', // Set text color to white
+    backgroundColor: 'white', // Set a background color
+    color: 'black', // Set text color to white
           }}>
         ShareWithJD
       </Typography>
