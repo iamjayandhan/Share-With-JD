@@ -15,25 +15,38 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import SendIcon from '@mui/icons-material/Send';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-
+import Alert from '@mui/material/Alert'; // Import the Alert component
 
 function TextShare() {
   const [sharedText, setSharedText] = useState("");
   const sharedCollectionRef = collection(db, "textshare"); // Use "textshare" collection
   const [sharedData, setSharedData] = useState([]);
+  const [showEmptyTextAlert, setShowEmptyTextAlert] = useState(false); // State for the empty text alert
+  const [showShareSuccessAlert, setShowShareSuccessAlert] = useState(false); // State for the share success alert
 
   const shareText = async () => {
     if (sharedText.trim() !== "") {
       try {
-        const newDocRef = await addDoc(sharedCollectionRef, { text: sharedText.trim() });
-        setSharedData([...sharedData, { text: sharedText.trim(), id: newDocRef.id }]);
+        const newDocRef = await addDoc(sharedCollectionRef, { text: sharedText });
+        setSharedData([...sharedData, { text: sharedText, id: newDocRef.id }]);
         setSharedText("");
+        setShowEmptyTextAlert(false); // Hide the empty text alert
+        setShowShareSuccessAlert(true); // Show the share success alert
+
+        // Hide the share success alert after a few seconds (e.g., 5 seconds)
+        setTimeout(() => {
+          setShowShareSuccessAlert(false);
+        }, 5000);
       } catch (error) {
         console.error("Error sharing text:", error);
       }
     } else {
-      alert("Text input cannot be empty.");
+      setShowEmptyTextAlert(true); // Show the empty text alert
+
+      // Hide the empty text alert after a few seconds (e.g., 5 seconds)
+      setTimeout(() => {
+        setShowEmptyTextAlert(false);
+      }, 5000);
     }
   }
 
@@ -64,12 +77,12 @@ function TextShare() {
 
   useEffect(() => {
     getSharedData();
-
   }, []);
 
   return (
     <Card sx={{
-      width: "90%",
+      width: "90%", // Set a fixed width (100%)
+      maxWidth: 500, // Set a maximum width (adjust as needed)
       margin: "0 auto", // Center the card
       padding: 0,
       boxShadow: 10,
@@ -92,7 +105,6 @@ function TextShare() {
           sx={{
             width: '100%', // Set the width to 100% or adjust it as needed
           }}
-          
         />
         <Button
           variant="contained"
@@ -101,21 +113,31 @@ function TextShare() {
           sx={{
             marginTop: 2,
             fontFamily: 'Raleway, sans-serif',
-            marginLeft:1,
+            marginLeft: 1,
             width: '145px', // Set a specific fixed width (adjust the value as needed)
           }}
         >
           Share Text
         </Button>
+        {showEmptyTextAlert && (
+          <Alert severity="error" sx={{ marginTop: 2 }}>Text input cannot be empty.</Alert>
+        )}
+        {showShareSuccessAlert && (
+          <Alert severity="success" sx={{ marginTop: 2 }}>Text shared successfully!</Alert>
+        )}
         <ul style={{ padding: 0 }}>
           {sharedData.map(data => (
             <Card sx={{
-              width: "90%", // Make the card full width
+              width: "90%", // Set a fixed width (100%)
+              maxWidth: 300, // Set a maximum width (adjust as needed)
               marginTop: 2,
               boxShadow: 3,
-              marginBottom:3,
+              marginBottom: 3,
+              whiteSpace: 'nowrap', // Prevent text from wrapping
+              overflow: 'hidden',
+              textOverflow: 'ellipsis', // Add ellipsis for overflow
             }} className="shared-card" key={data.id}>
-              <li style={{ margin: 0, padding: "15px 0px",paddingLeft:"10px" ,paddingRight:"10px"}}>
+              <li style={{ margin: 0, padding: "15px 0px", paddingLeft: "10px", paddingRight: "10px", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {data.text}
                 <CardActions className="full-card">
                   <div className="button-container">

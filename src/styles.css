@@ -155,3 +155,20 @@
   text-align: center;
 }
 
+/* Author.css */
+.bio-text {
+  font-size: 16px;
+  animation: text-flow 5s infinite alternate;
+  text-align: center;
+}
+
+@keyframes text-flow {
+  0% {
+    color: #5cc6d6;
+  }
+
+  /* Add more keyframes for text color animation */
+  100% {
+    color: #b45cd6;
+  }
+}

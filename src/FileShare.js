@@ -16,11 +16,16 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import Typography from "@mui/material/Typography";
+import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
 
 function FileShare() {
   const [files, setFiles] = useState([]);
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   useEffect(() => {
     fetchFiles(); // Initial fetch of files on component load
@@ -56,9 +61,33 @@ function FileShare() {
       setUploading(true);
       await uploadBytes(storageRef, file);
       setUploading(false);
-      fetchFiles(); // Fetch the updated file list after successful upload
+      setShowSuccessAlert(true); // Show the success alert
+      setShowErrorAlert(false); // Hide the error alert if it was shown
+      fetchFiles(); // Fetch the updated file list after a successful upload
+  
+      // Hide the success alert after a few seconds (e.g., 5 seconds)
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+      }, 5000);
+    } else {
+      setShowSuccessAlert(false); // Hide any previous success alert
+      setShowErrorAlert(true); // Show the error alert
+  
+      // Hide the error alert after a few seconds (e.g., 5 seconds)
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 5000);
     }
+  
+    // Reset the file input field to allow selecting a different file
+    document.getElementById("file-input").value = "";
   };
+  
+
+  // Filter the files based on the search term
+  const filteredFiles = files.filter((file) =>
+    file.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Card
@@ -66,35 +95,66 @@ function FileShare() {
         width: "78%",
         borderRadius: 2,
         boxShadow: 10,
-        padding:3,
+        padding: 3,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center", 
-        marginTop:-0.2,
+        alignItems: "center",
+        marginTop: -0.2,
       }}
       className="file-share-card"
     >
       <div>
-        <Typography gutterBottom variant="h5" component="div" >
+        <Typography gutterBottom variant="h5" component="div">
           File Sharing
         </Typography>
-        <input type="file" onChange={handleFileChange}  />
+        <input
+          type="file"
+          onChange={handleFileChange}
+          id="file-input"
+          sx={{ marginBottom: "20px" }}
+        />
         {uploading ? (
-          <Button variant="outlined" sx={{ marginTop:"20px"}} disabled>
+          <Button variant="outlined" disabled>
             <CircularProgress size={20} sx={{ marginRight: 1 }} /> Uploading
           </Button>
         ) : (
-          <Button onClick={handleUpload} variant="outlined" startIcon={<CloudUploadIcon />} sx={{ marginTop:"20px"}}>
+          <Button
+            onClick={handleUpload}
+            variant="outlined"
+            startIcon={<CloudUploadIcon />}
+            sx={{ marginTop: "20px" }}
+          >
             Upload File
           </Button>
         )}
 
+        {showSuccessAlert && (
+          <Alert severity="success" sx={{ marginTop: "20px" }}>
+            File uploaded successfully!
+          </Alert>
+        )}
 
-<Typography gutterBottom variant="h5" component="div" sx={{ marginTop:"40px"}}>
+        {showErrorAlert && (
+          <Alert severity="error" sx={{ marginTop: "20px" }}>
+            Please select a file to upload.
+          </Alert>
+        )}
+
+        <Typography gutterBottom variant="h5" component="div" sx={{ marginTop: "40px" }}>
           Uploaded Files
         </Typography>
-        {files.map((file) => (
+
+        {/* Search input */}
+        <TextField
+          type="text"
+          placeholder="Search files"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ width:"19rem", marginBottom: "30px" }}
+        />
+
+        {filteredFiles.map((file) => (
           <div
             key={file.name}
             sx={{
@@ -111,17 +171,20 @@ function FileShare() {
                 href={file.downloadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                sx={{ marginRight:"10px"}}
+                sx={{ marginRight: "10px" }}
               >
                 Download
               </Button>
 
-              <Button onClick={() => deleteFile(file.name)} variant="outlined" startIcon={<DeleteIcon />}>
+              <Button
+                onClick={() => deleteFile(file.name)}
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+              >
                 Delete
               </Button>
             </CardActions>
           </div>
-          
         ))}
       </div>
     </Card>
