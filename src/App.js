@@ -8,7 +8,6 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Notice from './Notice';
 import Author from './Author';
-import TestVantaBirds from './TestVantaBirds'; // Replace with the correct path to your component file
 
 
 
@@ -41,13 +40,11 @@ function App() {
         <Tab label="Text Share" />
         <Tab label="File Share" />
         <Tab label="Author" />
-        <Tab label="Dev" />
       </Tabs>
 
       {value === 0 && <TextShare />}
       {value === 1 && <FileShare />}
       {value === 2 && <Author />}
-      {value === 3 && <TestVantaBirds backgroundColor="black" birdSize={1}/>}
       <Notice/>
     </div>
     </div>
