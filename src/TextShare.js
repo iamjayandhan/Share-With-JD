@@ -18,13 +18,13 @@ import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert'; // Import the Alert component
 import DeleteIcon from "@mui/icons-material/Delete";
 
-
 function TextShare() {
   const [sharedText, setSharedText] = useState("");
   const sharedCollectionRef = collection(db, "textshare"); // Use "textshare" collection
   const [sharedData, setSharedData] = useState([]);
   const [showEmptyTextAlert, setShowEmptyTextAlert] = useState(false); // State for the empty text alert
   const [showShareSuccessAlert, setShowShareSuccessAlert] = useState(false); // State for the share success alert
+  const [searchText, setSearchText] = useState("");
 
   const shareText = async () => {
     if (sharedText.trim() !== "") {
@@ -81,10 +81,14 @@ function TextShare() {
     getSharedData();
   }, []);
 
+  const filteredSharedData = sharedData.filter(data =>
+    data.text.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <Card sx={{
-      width: "90%", // Set a fixed width (100%)
-      margin: "0 auto", // Center the card
+      width: "90%",
+      margin: "0 auto",
       padding: 0,
       boxShadow: 10,
       borderRadius: 2,
@@ -102,9 +106,9 @@ function TextShare() {
           variant="outlined"
           value={sharedText}
           onChange={(event) => setSharedText(event.target.value)}
-          placeholder="Enter text to share"
+          placeholder=""
           sx={{
-            width: '100%', // Set the width to 100% or adjust it as needed
+            width: '90%',
           }}
         />
         <Button
@@ -115,7 +119,7 @@ function TextShare() {
             marginTop: 2,
             fontFamily: 'Raleway, sans-serif',
             marginLeft: 1,
-            width: '145px', // Set a specific fixed width (adjust the value as needed)
+            width: '145px',
           }}
         >
           Share Text
@@ -126,17 +130,33 @@ function TextShare() {
         {showShareSuccessAlert && (
           <Alert severity="success" sx={{ marginTop: 2 }}>Text shared successfully!</Alert>
         )}
+
+        <Typography gutterBottom variant="h7" component="div" sx={{marginTop:2,fontSize:"1rem"}} className="responsive-text">
+          looking for anything?
+        </Typography>
+
+        <TextField
+          id="search-text"
+          label="Search Text"
+          variant="outlined"
+          value={searchText}
+          onChange={(event) => setSearchText(event.target.value)}
+          sx={{
+            width: '90%',
+            marginTop: 1,
+          }}
+        />
         <ul style={{ padding: 0 }}>
-          {sharedData.map(data => (
+          {filteredSharedData.map(data => (
             <Card sx={{
-              width: "90%", // Set a fixed width (100%)
-              maxWidth: 300, // Set a maximum width (adjust as needed)
+              width: "90%",
+              maxWidth: 300,
               marginTop: 2,
               boxShadow: 3,
               marginBottom: 3,
-              whiteSpace: 'nowrap', // Prevent text from wrapping
+              whiteSpace: 'nowrap',
               overflow: 'hidden',
-              textOverflow: 'ellipsis', // Add ellipsis for overflow
+              textOverflow: 'ellipsis',
             }} className="shared-card" key={data.id}>
               <li style={{ margin: 0, padding: "15px 0px", paddingLeft: "10px", paddingRight: "10px", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
                 {data.text}
@@ -154,5 +174,4 @@ function TextShare() {
     </Card>
   );
 }
-
 export default TextShare;

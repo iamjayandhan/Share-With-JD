@@ -54,6 +54,7 @@
 }
 .left-component .MuiCardContent-root {
   margin: 16px; /* Add margin around the message content */
+  margin-right: -1rem;
 }
 
 /* Add margin to the left of the button to create spacing */
@@ -90,7 +91,9 @@
   background-color: #f0f0f0; /* Change the background color on hover */
 }
 
-  
+  .responsive-text {
+    font-size: 1.1rem !important; /* Adjust the font size for mobile */
+  }
 
   /* Reduce font size and padding for better mobile view */
   .left-component .MuiTypography-gutterBottom {
@@ -106,7 +109,7 @@
   /* Reduce font size and spacing for the text area on smaller screens */
   .left-component .MuiInputBase-input.MuiInputBase-input {
     font-size: 16px;
-    width: 17rem;
+    width: 19.2rem;
     /* padding: 10px; */
   }
 
@@ -193,6 +196,7 @@
     color: #5cc6d6;
   }
 }
+
 
 
 

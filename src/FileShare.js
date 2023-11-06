@@ -12,9 +12,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CircularProgress from "@mui/material/CircularProgress";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
-import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import SendIcon from "@mui/icons-material/Send";
 import Typography from "@mui/material/Typography";
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
@@ -89,6 +87,8 @@ function FileShare() {
     file.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
+
   return (
     <Card
       sx={{
@@ -108,12 +108,25 @@ function FileShare() {
         <Typography gutterBottom variant="h5" component="div">
           File Sharing
         </Typography>
-        <input
+        {/* <input
           type="file"
           onChange={handleFileChange}
           id="file-input"
           sx={{ marginBottom: "20px" }}
-        />
+        /> */}
+
+      <label style={{ border: "2px dashed rgb(204, 204, 204)", borderRadius: "4px", padding: "20px", textAlign: "center", cursor: "pointer", display: "block" }}>
+          <div>Drag and drop a file here or click to select one</div>
+          <input
+            type="file"
+            onChange={handleFileChange}
+            id="file-input"
+            style={{ display: "none" }}
+          />
+        </label>
+
+
+
         {uploading ? (
           <Button variant="outlined" disabled>
             <CircularProgress size={20} sx={{ marginRight: 1 }} /> Uploading
