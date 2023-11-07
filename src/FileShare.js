@@ -4,7 +4,7 @@ import {
   ref,
   listAll,
   getDownloadURL,
-  uploadBytes,
+  uploadBytesResumable,
   deleteObject,
 } from "firebase/storage";
 import Button from "@mui/material/Button";
@@ -14,13 +14,14 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
-import TextField from '@mui/material/TextField';
-import Alert from '@mui/material/Alert';
+import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
 
 function FileShare() {
   const [files, setFiles] = useState([]);
-  const [file, setFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -49,45 +50,58 @@ function FileShare() {
   };
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+    const selectedFiles = e.target.files;
+    setSelectedFiles([...selectedFiles]);
   };
 
-  const handleUpload = async () => {
-    if (file) {
-      const storageRef = ref(storage, `uploaded_files/${file.name}`);
-      setUploading(true);
-      await uploadBytes(storageRef, file);
-      setUploading(false);
-      setShowSuccessAlert(true); // Show the success alert
-      setShowErrorAlert(false); // Hide the error alert if it was shown
-      fetchFiles(); // Fetch the updated file list after a successful upload
-  
-      // Hide the success alert after a few seconds (e.g., 5 seconds)
-      setTimeout(() => {
-        setShowSuccessAlert(false);
-      }, 5000);
-    } else {
+  const uploadFiles = async () => {
+    if (selectedFiles.length === 0) {
       setShowSuccessAlert(false); // Hide any previous success alert
       setShowErrorAlert(true); // Show the error alert
-  
+
       // Hide the error alert after a few seconds (e.g., 5 seconds)
       setTimeout(() => {
         setShowErrorAlert(false);
       }, 5000);
+      return;
     }
-  
-    // Reset the file input field to allow selecting a different file
-    document.getElementById("file-input").value = "";
+
+    setUploading(true);
+    const promises = selectedFiles.map((file) => {
+      const storageRef = ref(storage, `uploaded_files/${file.name}`);
+      const task = uploadBytesResumable(storageRef, file);
+
+      task.on("state_changed", (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploadProgress((prevProgress) => ({
+          ...prevProgress,
+          [file.name]: progress,
+        }));
+      });
+
+      return task;
+    });
+
+    try {
+      await Promise.all(promises);
+      setUploading(false);
+      setShowSuccessAlert(true); // Show the success alert
+      setSelectedFiles([]); // Clear selected files
+      fetchFiles(); // Fetch the updated file list after a successful upload
+
+      // Hide the success alert after a few seconds (e.g., 5 seconds)
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+      }, 5000);
+    } catch (error) {
+      console.error("Error uploading files:", error);
+    }
   };
-  
 
   // Filter the files based on the search term
   const filteredFiles = files.filter((file) =>
     file.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-
 
   return (
     <Card
@@ -108,24 +122,26 @@ function FileShare() {
         <Typography gutterBottom variant="h5" component="div">
           File Sharing
         </Typography>
-        {/* <input
-          type="file"
-          onChange={handleFileChange}
-          id="file-input"
-          sx={{ marginBottom: "20px" }}
-        /> */}
 
-      <label style={{ border: "2px dashed rgb(204, 204, 204)", borderRadius: "4px", padding: "20px", textAlign: "center", cursor: "pointer", display: "block" }}>
+        <label
+          style={{
+            border: "2px dashed rgb(204, 204, 204)",
+            borderRadius: "4px",
+            padding: "20px",
+            textAlign: "center",
+            cursor: "pointer",
+            display: "block",
+          }}
+        >
           <div>Drag and drop a file here or click to select one</div>
           <input
             type="file"
             onChange={handleFileChange}
             id="file-input"
             style={{ display: "none" }}
+            multiple
           />
         </label>
-
-
 
         {uploading ? (
           <Button variant="outlined" disabled>
@@ -133,25 +149,43 @@ function FileShare() {
           </Button>
         ) : (
           <Button
-            onClick={handleUpload}
+            onClick={uploadFiles}
             variant="contained"
             startIcon={<CloudUploadIcon />}
             sx={{ marginTop: "20px" }}
           >
-            Upload File
+            Upload Files
           </Button>
         )}
 
         {showSuccessAlert && (
           <Alert severity="success" sx={{ marginTop: "20px" }}>
-            File uploaded successfully!
+            Files uploaded successfully!
           </Alert>
         )}
 
         {showErrorAlert && (
           <Alert severity="error" sx={{ marginTop: "20px" }}>
-            Please select a file to upload.
+            Please select one or more files to upload.
           </Alert>
+        )}
+
+        {selectedFiles.length > 0 && (
+          <div>
+            <Typography variant="h6" component="div" sx={{ marginTop: "20px" }}>
+              Selected Files:
+            </Typography>
+            <ul>
+              {selectedFiles.map((file) => (
+                <li key={file.name}>
+                  {file.name} -{" "}
+                  {uploadProgress[file.name]
+                    ? `${uploadProgress[file.name].toFixed(2)}%`
+                    : "Queued"}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <Typography gutterBottom variant="h5" component="div" sx={{ marginTop: "40px" }}>
@@ -164,7 +198,7 @@ function FileShare() {
           placeholder="Search files"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ width:"19rem", marginBottom: "30px" }}
+          sx={{ width: "19rem", marginBottom: "30px" }}
         />
 
         {filteredFiles.map((file) => (
@@ -180,7 +214,6 @@ function FileShare() {
               <Button
                 variant="contained"
                 component="a"
-                href="#as-link"
                 href={file.downloadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
