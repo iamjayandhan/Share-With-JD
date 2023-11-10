@@ -46,14 +46,14 @@ const Author = () => {
       className="file-share-card"
     >
       {/* <div className='bg' > */}
-      <div className="author"  style={{ textAlign: 'center' }}>
+      <div className="author"  style={{ textAlign: 'center'}}>
       
         <h3 style={{ fontFamily: 'Arial, sans-serif', fontSize: '24px', fontWeight: 'bold' ,marginTop:-5}}>
           404 Error
         </h3>
         <div className='bg' id='vanta'></div>
         {/* <p className="bio-text">Page not found.</p> */}
-        <Button variant="outlined" href="/" color="primary">
+        <Button variant="outlined" href="/" color="primary" sx={{marginTop:2}}>
           Go to Homepage
         </Button>
         </div>
