@@ -1,23 +1,21 @@
 import React from 'react';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import GLOBE from 'vanta/src/vanta.globe';
+import CELLS from 'vanta/src/vanta.cells';
 import { useEffect } from 'react';
 import './App.css';
 
 const Author = () => {
 
     useEffect(() => {
-      GLOBE({
+      CELLS({
         el: "#vanta",
         mouseControls: true,
         touchControls: true,
         gyroControls: false,
         minHeight: 200.00,
         minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00,
-        size: 0.60
+        scale: 1.00
       })
     })
     return (

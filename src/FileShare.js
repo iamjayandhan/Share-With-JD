@@ -244,7 +244,7 @@ function FileShare() {
                 Uploaded on: {new Date(file.timestamp).toLocaleString()}
               </Typography>
             </div>
-            <CardActions>
+            <CardActions sx={{ marginBottom:3}}>
               <Button
                 variant="contained"
                 component="a"
