@@ -6,6 +6,7 @@ import {
   getDownloadURL,
   uploadBytesResumable,
   deleteObject,
+  getMetadata,
 } from "firebase/storage";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -27,8 +28,8 @@ function FileShare() {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   useEffect(() => {
-    fetchFiles(); // Initial fetch of files on component load
-    
+    fetchFiles();
+
     // Add event listeners for drag-and-drop
     const dropArea = document.getElementById("file-drop-area");
     dropArea.addEventListener("dragover", handleDragOver);
@@ -39,17 +40,20 @@ function FileShare() {
       dropArea.removeEventListener("dragover", handleDragOver);
       dropArea.removeEventListener("drop", handleDrop);
     };
-    
   }, []);
 
   const fetchFiles = async () => {
     const storageRef = ref(storage, "uploaded_files");
     const filesList = await listAll(storageRef);
     const fileUrls = await Promise.all(
-      filesList.items.map(async (item) => ({
-        name: item.name,
-        downloadUrl: await getDownloadURL(item),
-      }))
+      filesList.items.map(async (item) => {
+        const metadata = await getMetadata(item);
+        return {
+          name: item.name,
+          downloadUrl: await getDownloadURL(item),
+          timestamp: metadata.timeCreated, // Use timeCreated from metadata as the timestamp
+        };
+      })
     );
     setFiles(fileUrls);
   };
@@ -68,10 +72,9 @@ function FileShare() {
 
   const uploadFiles = async () => {
     if (selectedFiles.length === 0) {
-      setShowSuccessAlert(false); // Hide any previous success alert
-      setShowErrorAlert(true); // Show the error alert
+      setShowSuccessAlert(false);
+      setShowErrorAlert(true);
 
-      // Hide the error alert after a few seconds (e.g., 5 seconds)
       setTimeout(() => {
         setShowErrorAlert(false);
       }, 5000);
@@ -97,11 +100,10 @@ function FileShare() {
     try {
       await Promise.all(promises);
       setUploading(false);
-      setShowSuccessAlert(true); // Show the success alert
-      setSelectedFiles([]); // Clear selected files
-      fetchFiles(); // Fetch the updated file list after a successful upload
+      setShowSuccessAlert(true);
+      setSelectedFiles([]);
+      fetchFiles();
 
-      // Hide the success alert after a few seconds (e.g., 5 seconds)
       setTimeout(() => {
         setShowSuccessAlert(false);
       }, 5000);
@@ -109,12 +111,10 @@ function FileShare() {
       console.error("Error uploading files:", error);
     }
 
-    // Handle drag-and-drop files
     const dropArea = document.getElementById("file-drop-area");
     dropArea.addEventListener("dragover", handleDragOver);
     dropArea.addEventListener("drop", handleDrop);
   };
-
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -123,7 +123,7 @@ function FileShare() {
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFiles = e.dataTransfer.files;
-    setSelectedFiles((prevFiles) => [...prevFiles,...droppedFiles]);
+    setSelectedFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
   };
 
   // Filter the files based on the search term
@@ -234,11 +234,16 @@ function FileShare() {
           <div
             key={file.name}
             sx={{
-              margin: "8px 0", // Add spacing between file entries
+              margin: "8px 0",
             }}
             className="file-entry"
           >
-            {file.name}
+            <div>
+              <Typography variant="subtitle1">{file.name}</Typography>
+              <Typography variant="caption" color="textSecondary">
+                Uploaded on: {new Date(file.timestamp).toLocaleString()}
+              </Typography>
+            </div>
             <CardActions>
               <Button
                 variant="contained"
