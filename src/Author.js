@@ -16,7 +16,7 @@ const Author = () => {
         minHeight: 200.00,
         minWidth: 200.00,
         scale: 1.00,
-        size: 0.50
+        size: 0.80
       })
     })
     return (
