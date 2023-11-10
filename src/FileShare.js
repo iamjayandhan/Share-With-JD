@@ -28,6 +28,18 @@ function FileShare() {
 
   useEffect(() => {
     fetchFiles(); // Initial fetch of files on component load
+    
+    // Add event listeners for drag-and-drop
+    const dropArea = document.getElementById("file-drop-area");
+    dropArea.addEventListener("dragover", handleDragOver);
+    dropArea.addEventListener("drop", handleDrop);
+
+    // Clean up the event listeners when the component unmounts
+    return () => {
+      dropArea.removeEventListener("dragover", handleDragOver);
+      dropArea.removeEventListener("drop", handleDrop);
+    };
+    
   }, []);
 
   const fetchFiles = async () => {
@@ -96,6 +108,22 @@ function FileShare() {
     } catch (error) {
       console.error("Error uploading files:", error);
     }
+
+    // Handle drag-and-drop files
+    const dropArea = document.getElementById("file-drop-area");
+    dropArea.addEventListener("dragover", handleDragOver);
+    dropArea.addEventListener("drop", handleDrop);
+  };
+
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const droppedFiles = e.dataTransfer.files;
+    setSelectedFiles((prevFiles) => [...prevFiles,...droppedFiles]);
   };
 
   // Filter the files based on the search term
@@ -124,6 +152,7 @@ function FileShare() {
         </Typography>
 
         <label
+          id="file-drop-area"
           style={{
             border: "2px dashed rgb(204, 204, 204)",
             borderRadius: "4px",
