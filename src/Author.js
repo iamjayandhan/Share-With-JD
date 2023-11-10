@@ -52,7 +52,7 @@ const Author = () => {
           404 Error
         </h3>
         <div className='bg' id='vanta'></div>
-        <p className="bio-text">Page not found.</p>
+        {/* <p className="bio-text">Page not found.</p> */}
         <Button variant="outlined" href="/" color="primary">
           Go to Homepage
         </Button>
